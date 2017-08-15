@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script type="text/javascript" src="js/angularJS.js"></script>
+</head>
+
+<body ng-app="myApp" ng-controller="myCtrl" class="jumbotron">
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="4">
+                        <div class="panel panel-default">
+                            <div class="panel-body" ng-model="registrations">
+                                N&#176; of participants <span class="glyphicon glyphicon-user"></span>: {{registrations.length}}.
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="16">
+                        <h1>July  2017</h1></th>
+                </tr>
+                <tr>
+                    <th colspan="4" ng-repeat="x in initTable">
+                        <h3>{{x.day}}</h3>
+                    </th>
+                </tr>
+                <tr>
+                    <th ng-repeat="x in hourstable track by $index">
+                        <h4>{{x.time}}</h4>
+                    </th>
+                </tr>
+                <tr ng-repeat="entry in registrations track by $index">
+                    <td class="border_style_bottom">
+                        {{entry.fullName}}
+                        <a ng-if="!entry.editedMode" ng-click="edit($index)" class="pull-right" ng-show="!disableNewInput">
+                                            Edit
+                                        </a>
+                        <a ng-if="entry.editedMode" ng-click="saveEdit($index)" class="pull-right">
+                                            Save
+                                        </a>
+                    </td>
+                    <td ng-repeat="x in hourstable track by $index">
+                        <span ng-if="!entry.editedMode && entry.checked[$index]">
+                            <img src="images/yes.png">
+                        </span>
+                        <span ng-if="!entry.editedMode && !entry.checked[$index]">
+                            <img src="images/no.png">
+                        </span>
+                        <input type="checkbox" ng-if="entry.editedMode" ng-model="entry.checked[$index]" ng-disabled="isCheckedEdit($index)">
+                    </td>
+                </tr>
+            </thead>
+            <tbody ng-if="!disableNewInput">
+                <tr>
+                    <td class="border_style_bottom">
+                        <input type="text" ng-model="currentEntry.fullName" placeholder="Full Name" ng-disabled="isFull()">
+                    </td>
+                    <td ng-repeat="x in hourstable">
+                        <input type="checkbox" ng-model="currentEntry.checked[$index]" ng-disabled="isChecked($index)">
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-md pull-right" ng-click="save()" ng-disabled="isFull()">
+                            Save
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>
+                    </td>
+                    <td class="border_style_top" ng-repeat="x in hourstable">
+                        {{isChecked($index) ? '1' : '0'}}/1
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</body>
